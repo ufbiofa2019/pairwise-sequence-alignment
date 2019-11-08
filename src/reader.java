@@ -72,6 +72,8 @@ public class Reader {
  	      
  	    int scoreMatrix[][] = new int[maxLength + 1][maxLength + 1]; 
  	      
+ 	    
+ 	    //These first two for loops initialize the matrix, filling the first row/column with "gaps" and every other cell with zeroes
  	    for (int[] filler : scoreMatrix) {
  	    	Arrays.fill(filler, 0);
  	    } 
@@ -83,10 +85,12 @@ public class Reader {
  	    }     	  
 
  	    //Fill the matrix
+ 	    //This loop runs through each row, filling every cell in the matrix with the largest possible value
+ 	    //The condition checks if there is a match or mismatch. That score is then compared against the possibility of a gap occuring
  	    for (int i = 1; i <= gene1Length; i++) { 
  	        for (int j = 1; j <= gene2Length; j++) { 
  	        	
- 	        	int largest = - 2147483648;
+ 	        	int largest = -2147483648;
  	        	
  	            if (gene1.charAt(i - 1) == gene2.charAt(j - 1)) { 
  	            	largest = Math.max(scoreMatrix[i][j - 1] + gapPenalty , scoreMatrix[i - 1][j] + gapPenalty);
@@ -103,19 +107,36 @@ public class Reader {
  	        } 
  	    } 
  	    
- 	    //Display filled matrix
- 	    System.out.println("\n\n");
- 	    for (int row = 0; row < scoreMatrix.length; row++) {
+ 	    String matrixString = "";
+ 	    
+ 	    //fills matrixString with the score matrix for output
+ 	    for (int row = 0; row < gene1Length + 1; row++) {
  	    	  
-             for (int  column= 0; column < scoreMatrix[row].length; column++) {
+             for (int  column= 0; column < gene2Length + 1; column++) {
              	System.out.print(scoreMatrix[row][column] + " ");
+             	matrixString = matrixString  + scoreMatrix[row][column] + " ";
              }
+             
+             matrixString = matrixString + "\n";
              
              System.out.println("\n");
              
          }
  	    
- 	  	    
+ 	    
+ 	    //outputs the score matrix to 2.02.txt
+ 	   try{
+			PrintWriter outputFile2 = new PrintWriter("2.o2.txt", "UTF-8");
+			outputFile2.println(matrixString);
+			outputFile2.close();
+ 	   }
+ 	   catch (FileNotFoundException e) {
+				System.out.println("File Not Found");
+ 	   }
+ 	   catch (UnsupportedEncodingException e) {
+				System.out.println("Unsupported Encoding");
+ 	   }
+	    
  	    int i = gene1Length;
  	    int j = gene2Length;
  	    int gene1Position = maxLength; 
@@ -154,7 +175,7 @@ public class Reader {
  	        } 
  	    } 
  	    
- 	    //Fills out the rest of alignment
+ 	    //Fills out the rest of alignment for gene1
  	    while (gene1Position > 0) 
  	    { 
  	        if (i > 0) {
@@ -189,15 +210,48 @@ public class Reader {
  	  
  	    /*PRINTED SOLUTION*/ 
  	    System.out.print("Maximum score: " + scoreMatrix[gene1Length][gene2Length] + "\n"); 
+ 	    
+ 	    //writes the optimal score to 
+  	   try{
+ 			PrintWriter outputFile1 = new PrintWriter("2.o1.txt", "UTF-8");
+ 			outputFile1.println(scoreMatrix[gene1Length][gene2Length]);
+ 			outputFile1.close();
+  	   }
+  	   catch (FileNotFoundException e) {
+ 				System.out.println("File Not Found");
+  	   } 
+  	   catch (UnsupportedEncodingException e) {
+ 				System.out.println("Unsupported Encoding");
+  	   }
+  	   
+  	   
+  	   String gene1String = "";
+  	   String gene2String = "";
  	    System.out.println("Aligned genes: "); 
  	    for (i = startIndexOfAlignment; i <= maxLength; i++) { 
  	        System.out.print(gene1Alignment[i]); 
+ 	        gene1String = gene1String + gene1Alignment[i];
  	    } 
  	    
  	    System.out.print("\n"); 
  	    for (i = startIndexOfAlignment; i <= maxLength; i++) { 
  	        System.out.print(gene2Alignment[i]); 
+ 	        gene2String = gene2String + gene2Alignment[i];
  	    } 
+ 	    
+ 	    String AlignmentOutputString = gene1String + "\n" + gene2String;
+ 	    
+ 	   try{
+			PrintWriter outputFile3 = new PrintWriter("2.o3.txt", "UTF-8");
+			outputFile3.println(AlignmentOutputString);
+			outputFile3.close();
+ 	   }
+ 	   catch (FileNotFoundException e) {
+				System.out.println("File Not Found");
+ 	   } 
+ 	   catch (UnsupportedEncodingException e) {
+				System.out.println("Unsupported Encoding");
+ 	   }
  	    
  	    return; 
  	} 
