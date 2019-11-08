@@ -30,7 +30,7 @@ public class Reader {
 //        long duration = endtime - starttime;
 //        long usedmem = endmem - startmem;
 //
-//        System.out.println("RUNTIME IN NANOSEC: 512892200");
+//        System.out.println("RUNTIME IN NANOSEC: " + duration);
 //        System.out.println("MEMORY USE IN GB: " + (double)usedmem/1000000000);
 //        long seconds = duration/1000000000;
 //        long minutes = seconds/60;
