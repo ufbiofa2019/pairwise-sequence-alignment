@@ -151,6 +151,9 @@ public class Reader {
  	    String multipleAlignments = "NO";
  	    while ( !(i == 0 || j == 0)) 
  	    { 
+ 	    	
+ 	    	//keeps count of the number of potential ways to reach the current value
+ 	    	//if there are more than one, then we know there are multiple optimal paths
  	    	int count = 0;
  	        if (gene1.charAt(i - 1) == gene2.charAt(j - 1)){
  	        	count++;
@@ -171,6 +174,8 @@ public class Reader {
  	        
  	        count = 0;
  	    	
+ 	        
+ 	        //we determine where to traverse next in the matrix by checking which value was added to the previous score to reach the current score
  	        if (gene1.charAt(i - 1) == gene2.charAt(j - 1)) { 
  	            gene1Alignment[gene1Position--] = gene1.charAt(i - 1); 
  	            gene2Alignment[gene2Position--] = gene2.charAt(j - 1); 
@@ -198,6 +203,8 @@ public class Reader {
  	        } 
  	    } 
  	    
+ 	    
+ 	    //outputs whether or not there are multiple optimal alignments to 2.o4.txt
   	   try{
  			PrintWriter outputFile4 = new PrintWriter("2.o4.txt", "UTF-8");
  			outputFile4.println(multipleAlignments);
@@ -273,6 +280,8 @@ public class Reader {
  	    
  	    String AlignmentOutputString = gene1String + "\n" + gene2String;
  	    
+ 	    
+ 	    //writes the final aligned strings to 2.o3.txt
  	   try{
 			PrintWriter outputFile3 = new PrintWriter("2.o3.txt", "UTF-8");
 			outputFile3.println(AlignmentOutputString);
