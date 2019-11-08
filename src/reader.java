@@ -1,38 +1,41 @@
 import java.util.*;
-
 import java.io.*; 
-import java.util.*; 
 import java.lang.*; 
 
 
 public class Reader {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
     	
- 	    String gene1 = "ATCAGAGTC"; 
- 	    String gene2 = "TTCAGTC"; 
- 	      
+    	File file = new File("2.in.txt");
+    	BufferedReader br = new BufferedReader(new FileReader(file));
+ 	    String gene1 = br.readLine();
+ 	    String gene2 = br.readLine();
+ 	     	      
  	    getMaxScore(gene1, gene2); 
- 	    
-        Runtime run = Runtime.getRuntime();
-        //calculate starting memory use and start time
-        long startmem = run.totalMemory()- run.freeMemory();
-        long starttime = System.nanoTime();
-	    String randomSeq = generateSeq(600000000);
-        //calculate ending memory use and end time
-        long endtime = System.nanoTime();
-        long endmem = run.totalMemory()- run.freeMemory();
-
-        //calculate total memory/runtime
-        long duration = endtime - starttime;
-        long usedmem = endmem - startmem;
-
-        System.out.println("RUNTIME IN NANOSEC: " + duration);
-        System.out.println("MEMORY USE IN GB: " + (double)usedmem/1000000000);
-        long seconds = duration/1000000000;
-        long minutes = seconds/60;
-        long hours = minutes/60;
-        System.out.println("HOURS: " + hours + "\nMINUTES: " + minutes + "\nSECONDS: " + seconds);
+// 	    getMaxScore("", "");
+// 	    System.out.println("\n");
+//        Runtime run = Runtime.getRuntime();
+//        //calculate starting memory use and start time
+//        long startmem = run.totalMemory()- run.freeMemory();
+//        long starttime = System.nanoTime();
+//	    String randomSeq = generateSeq(1000);
+//	    String randomSeq2 = generateSeq(1000);
+//	    getMaxScore(randomSeq, randomSeq2);
+//        //calculate ending memory use and end time
+//        long endtime = System.nanoTime();
+//        long endmem = run.totalMemory()- run.freeMemory();
+//
+//        //calculate total memory/runtime
+//        long duration = endtime - starttime;
+//        long usedmem = endmem - startmem;
+//
+//        System.out.println("RUNTIME IN NANOSEC: 512892200");
+//        System.out.println("MEMORY USE IN GB: " + (double)usedmem/1000000000);
+//        long seconds = duration/1000000000;
+//        long minutes = seconds/60;
+//        long hours = minutes/60;
+//        System.out.println("HOURS: " + hours + "\nMINUTES: " + minutes + "\nSECONDS: " + seconds);
     }
 
     /*Takes in an integer n and generates
@@ -113,13 +116,11 @@ public class Reader {
  	    for (int row = 0; row < gene1Length + 1; row++) {
  	    	  
              for (int  column= 0; column < gene2Length + 1; column++) {
-             	System.out.print(scoreMatrix[row][column] + " ");
              	matrixString = matrixString  + scoreMatrix[row][column] + " ";
              }
              
              matrixString = matrixString + "\n";
              
-             System.out.println("\n");
              
          }
  	    
@@ -146,8 +147,30 @@ public class Reader {
  	    
  	      
  	    //Backtracks through the matrix to find the optimal solution
+ 	    
+ 	    String multipleAlignments = "NO";
  	    while ( !(i == 0 || j == 0)) 
  	    { 
+ 	    	int count = 0;
+ 	        if (gene1.charAt(i - 1) == gene2.charAt(j - 1)){
+ 	        	count++;
+ 	        }
+ 	        if (scoreMatrix[i - 1][j - 1] + mismatchPenalty == scoreMatrix[i][j]){
+ 	        	count++;
+ 	        }
+ 	        if (scoreMatrix[i - 1][j] + gapPenalty == scoreMatrix[i][j]){
+ 	        	count++;
+ 	        }
+ 	        if (scoreMatrix[i][j - 1] + gapPenalty == scoreMatrix[i][j]){
+ 	        	count++;
+ 	        }
+ 	        
+ 	        if (count > 1){
+ 	        	multipleAlignments = "YES";
+ 	        }
+ 	        
+ 	        count = 0;
+ 	    	
  	        if (gene1.charAt(i - 1) == gene2.charAt(j - 1)) { 
  	            gene1Alignment[gene1Position--] = gene1.charAt(i - 1); 
  	            gene2Alignment[gene2Position--] = gene2.charAt(j - 1); 
@@ -175,6 +198,20 @@ public class Reader {
  	        } 
  	    } 
  	    
+  	   try{
+ 			PrintWriter outputFile4 = new PrintWriter("2.o4.txt", "UTF-8");
+ 			outputFile4.println(multipleAlignments);
+ 			outputFile4.close();
+  	   }
+  	   catch (FileNotFoundException e) {
+ 				System.out.println("File Not Found");
+  	   } 
+  	   catch (UnsupportedEncodingException e) {
+ 				System.out.println("Unsupported Encoding");
+  	   }
+ 	    
+ 	    //One of these while loops runs depending on which gene was not completely traced through the backtracking
+ 	    
  	    //Fills out the rest of alignment for gene1
  	    while (gene1Position > 0) 
  	    { 
@@ -187,6 +224,7 @@ public class Reader {
  	        }
  	    } 
  	    
+ 	    //Fills out the rest of alignment for gene2
  	    while (gene2Position > 0) 
  	    { 
  	        if (j > 0) {
@@ -200,7 +238,7 @@ public class Reader {
  	    
  	    int startIndexOfAlignment = 1; 
  	    
- 	    //Finds relevant part of matrix
+ 	    //Finds relevant part of matrix since it was assumed that the matrix could be the added length of the two genes
  	    for (i = maxLength; i >= 1; i--) { 
  	        if (gene2Alignment[i] == '_'  &&  gene1Alignment[i] == '_') { 
  	            startIndexOfAlignment = i + 1; 
@@ -208,10 +246,8 @@ public class Reader {
  	        } 
  	    } 
  	  
- 	    /*PRINTED SOLUTION*/ 
- 	    System.out.print("Maximum score: " + scoreMatrix[gene1Length][gene2Length] + "\n"); 
  	    
- 	    //writes the optimal score to 
+ 	    //writes the optimal score to outputFile1
   	   try{
  			PrintWriter outputFile1 = new PrintWriter("2.o1.txt", "UTF-8");
  			outputFile1.println(scoreMatrix[gene1Length][gene2Length]);
@@ -224,18 +260,14 @@ public class Reader {
  				System.out.println("Unsupported Encoding");
   	   }
   	   
-  	   
+  	   //Puts the gene alignments into a string
   	   String gene1String = "";
   	   String gene2String = "";
- 	    System.out.println("Aligned genes: "); 
  	    for (i = startIndexOfAlignment; i <= maxLength; i++) { 
- 	        System.out.print(gene1Alignment[i]); 
  	        gene1String = gene1String + gene1Alignment[i];
  	    } 
  	    
- 	    System.out.print("\n"); 
  	    for (i = startIndexOfAlignment; i <= maxLength; i++) { 
- 	        System.out.print(gene2Alignment[i]); 
  	        gene2String = gene2String + gene2Alignment[i];
  	    } 
  	    
