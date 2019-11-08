@@ -192,12 +192,12 @@ public class Reader {
  	        
  	        else if (scoreMatrix[i - 1][j] + gapPenalty == scoreMatrix[i][j]) { 
  	            gene1Alignment[gene1Position--] = gene1.charAt(i - 1); 
- 	            gene2Alignment[gene2Position--] = '_'; 
+ 	            gene2Alignment[gene2Position--] = '-'; 
  	            i--; 
  	        } 
  	        
  	        else if (scoreMatrix[i][j - 1] + gapPenalty == scoreMatrix[i][j]) { 
- 	            gene1Alignment[gene1Position--] = '_'; 
+ 	            gene1Alignment[gene1Position--] = '-'; 
  	            gene2Alignment[gene2Position--] = gene2.charAt(j - 1); 
  	            j--; 
  	        } 
@@ -227,7 +227,7 @@ public class Reader {
  	        }
  	        
  	        else {
- 	        	gene1Alignment[gene1Position--] = '_'; 
+ 	        	gene1Alignment[gene1Position--] = '-'; 
  	        }
  	    } 
  	    
@@ -238,7 +238,7 @@ public class Reader {
  	        	gene2Alignment[gene2Position--] = gene2.charAt(--j); 
  	        }
  	        else {
- 	        	gene2Alignment[gene2Position--] = '_'; 
+ 	        	gene2Alignment[gene2Position--] = '-'; 
  	        }
  	    } 
  	  
@@ -247,7 +247,7 @@ public class Reader {
  	    
  	    //Finds relevant part of matrix since it was assumed that the matrix could be the added length of the two genes
  	    for (i = maxLength; i >= 1; i--) { 
- 	        if (gene2Alignment[i] == '_'  &&  gene1Alignment[i] == '_') { 
+ 	        if (gene2Alignment[i] == '-'  &&  gene1Alignment[i] == '-') { 
  	            startIndexOfAlignment = i + 1; 
  	            break; 
  	        } 
